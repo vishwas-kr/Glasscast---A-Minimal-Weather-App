@@ -7,12 +7,11 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct AuthView: View {
     @StateObject private var viewModel = AuthViewModel()
     @FocusState private var focusedEmail: Field?
     @FocusState private var focusedPassword: Field?
+    @EnvironmentObject var session: SessionManager
 
     enum Field {
         case email, password
@@ -32,6 +31,14 @@ struct AuthView: View {
             .padding()
         }
         .animation(.smooth, value: viewModel.isLoading)
+        .alert("Error", isPresented: Binding(
+            get: { viewModel.errorMessage != nil },
+            set: { _ in viewModel.errorMessage = nil }
+        )) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(viewModel.errorMessage ?? "An unknown error occurred.")
+        }
     }
 }
 
@@ -141,7 +148,7 @@ private extension AuthView {
 
     var continueButton: some View {
         Button {
-            viewModel.submit(session: SessionManager())
+            viewModel.submit(session: session)
         } label: {
             HStack {
                 if viewModel.isLoading {
