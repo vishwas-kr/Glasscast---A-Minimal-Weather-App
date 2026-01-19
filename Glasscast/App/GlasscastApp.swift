@@ -15,10 +15,11 @@ struct GlasscastApp: App {
         WindowGroup {
             Group {
                 if session.isAuthenticated {
-                    HomeView()
+                    RootTabView()
                 } else {
                     AuthView()
                 }
+
             }
             .environmentObject(session)
         }
