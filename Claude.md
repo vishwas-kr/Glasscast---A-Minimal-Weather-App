@@ -87,27 +87,33 @@ Glasscast/
 │   └── Utilities/
 │       ├── Constants.swift
 │       ├── Environment.swift
-│       ├── SessionManager.swift
+│       ├── SessionManager.swift (or AuthManager)
 │       └── Extensions/
 │
 ├── Features/
 │   ├── Auth/
-│   │   ├── AuthView.swift
-│   │   └── AuthViewModel.swift
+│   │   ├── View/
+│   │   │   └── AuthView.swift
+│   │   └── ViewModel/
+│   │       └── AuthViewModel.swift
 │   │
 │   ├── Home/
-│   │   ├── HomeView.swift
-│   │   └── HomeViewModel.swift
-│   │   ├── FavoritesView.swift
-│   │   └── FavoritesViewModel.swift
+│   │   ├── View/
+│   │   │   └── HomeView.swift
+│   │   └── ViewModel/
+│   │       └── HomeViewModel.swift
 │   │
 │   ├── Search/
-│   │   ├── SearchView.swift
-│   │   └── SearchViewModel.swift
+│   │   ├── View/
+│   │   │   └── SearchView.swift
+│   │   └── ViewModel/
+│   │       └── SearchViewModel.swift
 │   │
 │   └── Settings/
-│       ├── SettingsView.swift
-│       └── SettingsViewModel.swift
+│       ├── View/
+│       │   └── SettingsView.swift
+│       └── ViewModel/
+│           └── SettingsViewModel.swift
 │
 └── Resources/
     ├── Assets.xcassets
@@ -157,7 +163,6 @@ Glasscast/
 * Current weather display
 * 5-day forecast
 * Pull-to-refresh
-* Favorite toggle in header
 
 **ViewModel**
 
@@ -169,10 +174,11 @@ Glasscast/
 
 **Features**
 
-* Dedicated Tab
+* Dedicated Tab (moved from Home)
 * List of favorite cities
 * Remove favorites
 * Navigate to Home with selected city
+* **Logic:** Favorites are matched by location distance (< 2km) to prevent duplicates.
 
 ---
 
@@ -181,12 +187,13 @@ Glasscast/
 **Features**
 
 * Search cities (OpenWeather Geo API)
-* Recent searches list
+* Recent searches list (Persisted in UserDefaults)
 * Add/remove favorites
 * Sync with Supabase
 
 **Rules**
 
+* Debounce search input
 * Favorites must be user-scoped
 * No duplicate cities
 
@@ -198,6 +205,7 @@ Glasscast/
 
 * Temperature unit toggle (°C / °F)
 * Appearance toggle (System / Light / Dark)
+* Wind speed unit toggle (km/h / mph)
 * Sign out
 
 **Persistence**
@@ -254,7 +262,7 @@ Glasscast/
 
 ## 8. State Management
 
-Use explicit state enums:
+Use ObservableObject pattern with explicit published properties:
 
 ```
 enum ViewState {
