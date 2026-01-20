@@ -13,25 +13,21 @@ struct AuthView: View {
     @FocusState private var focusedPassword: Field?
     @EnvironmentObject var session: SessionManager
     @Environment(\.appTheme) var theme
-
+    
     enum Field {
         case email, password
     }
-
+    
     var body: some View {
-        ZStack {
-            theme.background
-                .ignoresSafeArea()
-
-            VStack {
-                Spacer()
-
-                glassCard
-
-                Spacer()
-            }
-            .padding()
+        
+        VStack {
+            Spacer()
+            
+            glassCard
+            
+            Spacer()
         }
+        .padding()
         .animation(.smooth, value: viewModel.isLoading)
         .alert("Error", isPresented: Binding(
             get: { viewModel.errorMessage != nil },
@@ -46,7 +42,7 @@ struct AuthView: View {
 
 // MARK: - Components
 private extension AuthView {
-
+    
     var glassCard: some View {
         GlassEffectContainer{
             VStack(spacing: 24) {
@@ -66,34 +62,33 @@ private extension AuthView {
                     .shadow(color: .black.opacity(0.15), radius: 30, y: 20)
             }
         }
-       
-        //.glassEffect()
+        
     }
-
+    
     var header: some View {
         VStack(spacing: 8) {
             Text(viewModel.mode.title)
                 .font(.system(size: 34, weight: .bold))
                 .foregroundStyle(theme.primaryText)
-
+            
             Text(viewModel.mode.subtitle)
                 .font(.system(size: 16))
                 .foregroundStyle(theme.secondaryText)
         }
     }
-
-
+    
+    
     var emailField: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("EMAIL ADDRESS")
                 .font(.caption)
                 .fontWeight(.semibold)
                 .foregroundStyle(theme.secondaryText)
-
+            
             HStack {
                 Image(systemName: "envelope")
                     .foregroundStyle(theme.secondaryText)
-
+                
                 TextField("name@example.com", text: $viewModel.email)
                     .foregroundStyle(theme.primaryText)
                     .keyboardType(.emailAddress)
@@ -105,18 +100,18 @@ private extension AuthView {
             .glassEffect()
         }
     }
-
+    
     var passwordField: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("PASSWORD")
                 .font(.caption)
                 .fontWeight(.semibold)
                 .foregroundStyle(theme.secondaryText)
-
+            
             HStack {
                 Image(systemName: "lock")
                     .foregroundStyle(theme.secondaryText)
-
+                
                 Group {
                     if viewModel.isPasswordVisible {
                         TextField("••••••••", text: $viewModel.password)
@@ -125,7 +120,7 @@ private extension AuthView {
                     }
                 }
                 .focused($focusedPassword, equals: .password)
-
+                
                 Button {
                     withAnimation {
                         viewModel.isPasswordVisible.toggle()
@@ -139,7 +134,7 @@ private extension AuthView {
             .glassEffect()
         }
     }
-
+    
     var forgotPassword: some View {
         HStack {
             Spacer()
@@ -148,7 +143,7 @@ private extension AuthView {
                 .foregroundStyle(theme.secondaryText)
         }
     }
-
+    
     var continueButton: some View {
         Button {
             HapticManager.impact(.medium)
@@ -161,7 +156,7 @@ private extension AuthView {
                 } else {
                     Text("Continue")
                         .fontWeight(.semibold)
-
+                    
                     Image(systemName: "arrow.right")
                 }
             }
@@ -171,12 +166,12 @@ private extension AuthView {
         .buttonStyle(AuthButtonStyle())
         .disabled(viewModel.isLoading)
     }
-
+    
     var footer: some View {
         HStack(spacing: 4) {
             Text(viewModel.mode.footerText)
                 .foregroundStyle(theme.secondaryText)
-
+            
             Button(viewModel.mode.footerActionText) {
                 viewModel.toggleMode()
             }
@@ -184,7 +179,7 @@ private extension AuthView {
             .foregroundStyle(theme.accent)
         }
         .font(.footnote)
-
+        
     }
 }
 

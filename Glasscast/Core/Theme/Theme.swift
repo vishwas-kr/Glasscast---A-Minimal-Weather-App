@@ -31,8 +31,6 @@ enum AppAppearance: String, CaseIterable, Identifiable {
     }
 }
 
-// MARK: - Environment Support
-
 struct AppThemeKey: EnvironmentKey {
     static let defaultValue: AppTheme = .light
 }
@@ -59,11 +57,5 @@ struct ThemeModifier: ViewModifier {
         return content
             .environment(\.appTheme, ThemeManager.theme(for: selectedScheme ?? systemScheme))
             .preferredColorScheme(selectedScheme)
-    }
-}
-
-extension View {
-    func withAppTheme() -> some View {
-        modifier(ThemeModifier())
     }
 }

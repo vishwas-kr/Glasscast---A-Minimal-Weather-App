@@ -11,9 +11,12 @@ import CoreLocation
 struct RootTabView: View {
     @StateObject private var homeViewModel = HomeViewModel()
     @State private var selectedTab: AppTab = .home
-
+    @Environment(\.appTheme) private var theme
+    
     var body: some View {
         ZStack(alignment: .bottom) {
+            theme.background
+                    .ignoresSafeArea()
             content
             tabBar
         }
@@ -21,6 +24,9 @@ struct RootTabView: View {
         .task {
             homeViewModel.requestLocation()
         }
+    }
+    var tabTransition: AnyTransition {
+        .opacity.combined(with: .scale(scale: 0.98))
     }
 }
 
@@ -35,28 +41,28 @@ private extension RootTabView {
             switch selectedTab {
             case .home:
                 HomeView(viewModel: homeViewModel)
-                    .transition(.opacity.combined(with: .move(edge: .leading)))
-
+                    .transition(tabTransition)
+                
             case .search:
                 SearchView(onCitySelected: { location in
                     homeViewModel.loadWeather(for: location)
                     selectedTab = .home
                 })
-                    .transition(.opacity.combined(with: .move(edge: .trailing)))
-
+                .transition(tabTransition)
+                
             case .favorites:
                 FavoritesView { location in
                     homeViewModel.loadWeather(for: location)
                     selectedTab = .home
                 }
-                .transition(.opacity.combined(with: .move(edge: .trailing)))
-
+                .transition(tabTransition)
+                
             case .settings:
                 SettingsView()
-                    .transition(.opacity.combined(with: .move(edge: .trailing)))
+                    .transition(tabTransition)
             }
         }
-        .animation(.smooth, value: selectedTab)
+        .animation(.smooth(duration: 0.35), value: selectedTab)
     }
 }
 
@@ -82,6 +88,7 @@ private extension RootTabView {
             withAnimation(.smooth) {
                 selectedTab = tab
             }
+            HapticManager.selection()
         } label: {
             Image(systemName: tab.icon)
                 .font(.system(size: 20, weight: .semibold))
@@ -98,7 +105,7 @@ private extension RootTabView {
                 }
         }
     }
-
+    
 }
 
 

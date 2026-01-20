@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct WeatherResponse: Codable {
     let name: String
@@ -54,4 +55,12 @@ struct GeoLocation: Codable, Identifiable {
     let state: String?
     
     var id: String { "\(name)-\(lat)-\(lon)" }
+}
+
+struct ForecastDay: Identifiable {
+    let id = UUID()
+    let day: String
+    let icon: String
+    let temp: Int
+    let color: Color
 }

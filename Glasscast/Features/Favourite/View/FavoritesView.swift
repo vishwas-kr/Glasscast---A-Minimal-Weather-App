@@ -14,23 +14,19 @@ struct FavoritesView: View {
     var onSelect: (CLLocation) -> Void
     
     var body: some View {
-        ZStack {
-            theme.background
-                .ignoresSafeArea()
+        
+        VStack(spacing: 0) {
+            header
             
-            VStack(spacing: 0) {
-                header
-                
-                if viewModel.isLoading {
-                    Spacer()
-                    ProgressView()
-                        .scaleEffect(1.5)
-                    Spacer()
-                } else if viewModel.favorites.isEmpty {
-                    emptyState
-                } else {
-                    favoritesList
-                }
+            if viewModel.isLoading {
+                Spacer()
+                ProgressView()
+                    .scaleEffect(1.5)
+                Spacer()
+            } else if viewModel.favorites.isEmpty {
+                emptyState
+            } else {
+                favoritesList
             }
         }
         .onAppear {

@@ -33,7 +33,6 @@ final class FavoritesService: ObservableObject {
     }
     
     func isFavorite(_ city: CityResult) -> Bool {
-        // Use distance check (2km tolerance) to handle floating point precision differences
         favorites.contains(where: { $0.location.distance(from: city.location) < 2000 })
     }
     
@@ -90,7 +89,6 @@ final class FavoritesService: ObservableObject {
         } catch {
             print("Error adding favorite: \(error)")
             await MainActor.run {
-                // Revert optimistic update using fuzzy match
                 if let index = favorites.firstIndex(where: { $0.location.distance(from: city.location) < 2000 }) {
                     favorites.remove(at: index)
                 }
@@ -101,7 +99,6 @@ final class FavoritesService: ObservableObject {
     private func remove(_ city: CityResult) async {
         guard let userId = client.auth.currentUser?.id else { return }
         
-        // Find the exact entry in local favorites to get the exact lat/lon stored in DB
         let match = favorites.first { $0.location.distance(from: city.location) < 2000 }
         guard let targetCity = match else { return }
         
@@ -128,20 +125,4 @@ final class FavoritesService: ObservableObject {
             }
         }
     }
-}
-
-struct FavoriteCityDTO: Codable {
-    let id: UUID
-    let user_id: UUID
-    let city_name: String
-    let lat: Double
-    let lon: Double
-    let created_at: String
-}
-
-struct FavoriteCityInsertDTO: Codable {
-    let user_id: UUID
-    let city_name: String
-    let lat: Double
-    let lon: Double
 }

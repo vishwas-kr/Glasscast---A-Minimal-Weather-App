@@ -6,13 +6,32 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3A43118A2F1E8FEB004292AC /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 3A4311892F1E8FEB004292AC /* Supabase */; };
+		3AABE69F2F1E8516004F995B /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 3AABE69E2F1E8516004F995B /* Auth */; };
+		3AABE6A12F1E8516004F995B /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = 3AABE6A02F1E8516004F995B /* Realtime */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		3A67545D2F1D3C82001CD08B /* Glasscast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Glasscast.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		3A329AB82F1F7353002708CB /* Exceptions for "Glasscast" folder in "Glasscast" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 3A67545C2F1D3C82001CD08B /* Glasscast */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		3A67545F2F1D3C82001CD08B /* Glasscast */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3A329AB82F1F7353002708CB /* Exceptions for "Glasscast" folder in "Glasscast" target */,
+			);
 			path = Glasscast;
 			sourceTree = "<group>";
 		};
@@ -23,16 +42,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AABE69F2F1E8516004F995B /* Auth in Frameworks */,
+				3AABE6A12F1E8516004F995B /* Realtime in Frameworks */,
+				3A43118A2F1E8FEB004292AC /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3A4311882F1E8FEB004292AC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		3A6754542F1D3C82001CD08B = {
 			isa = PBXGroup;
 			children = (
 				3A67545F2F1D3C82001CD08B /* Glasscast */,
+				3A4311882F1E8FEB004292AC /* Frameworks */,
 				3A67545E2F1D3C82001CD08B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -59,12 +89,17 @@
 			buildRules = (
 			);
 			dependencies = (
+				3AABE6A52F1E8571004F995B /* PBXTargetDependency */,
+				3AABE6A32F1E8564004F995B /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				3A67545F2F1D3C82001CD08B /* Glasscast */,
 			);
 			name = Glasscast;
 			packageProductDependencies = (
+				3AABE69E2F1E8516004F995B /* Auth */,
+				3AABE6A02F1E8516004F995B /* Realtime */,
+				3A4311892F1E8FEB004292AC /* Supabase */,
 			);
 			productName = Glasscast;
 			productReference = 3A67545D2F1D3C82001CD08B /* Glasscast.app */;
@@ -94,6 +129,9 @@
 			);
 			mainGroup = 3A6754542F1D3C82001CD08B;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3AABE69D2F1E8515004F995B /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3A67545E2F1D3C82001CD08B /* Products */;
 			projectDirPath = "";
@@ -124,9 +162,22 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		3AABE6A32F1E8564004F995B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 3AABE6A22F1E8564004F995B /* Auth */;
+		};
+		3AABE6A52F1E8571004F995B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 3AABE6A42F1E8571004F995B /* Supabase */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
 		3A6754662F1D3C83001CD08B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 3A67545F2F1D3C82001CD08B /* Glasscast */;
+			baseConfigurationReferenceRelativePath = Dev.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -191,6 +242,8 @@
 		};
 		3A6754672F1D3C83001CD08B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 3A67545F2F1D3C82001CD08B /* Glasscast */;
+			baseConfigurationReferenceRelativePath = Dev.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -248,6 +301,8 @@
 		};
 		3A6754692F1D3C83001CD08B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 3A67545F2F1D3C82001CD08B /* Glasscast */;
+			baseConfigurationReferenceRelativePath = Dev.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -256,6 +311,9 @@
 				DEVELOPMENT_TEAM = 3FZ8L8R4MA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Glasscast/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Need your location to fetch the weather details";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Need your location to fetch the weather details";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -280,6 +338,8 @@
 		};
 		3A67546A2F1D3C83001CD08B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 3A67545F2F1D3C82001CD08B /* Glasscast */;
+			baseConfigurationReferenceRelativePath = Dev.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -288,6 +348,9 @@
 				DEVELOPMENT_TEAM = 3FZ8L8R4MA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Glasscast/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Need your location to fetch the weather details";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Need your location to fetch the weather details";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -320,7 +383,7 @@
 				3A6754672F1D3C83001CD08B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		3A6754682F1D3C83001CD08B /* Build configuration list for PBXNativeTarget "Glasscast" */ = {
 			isa = XCConfigurationList;
@@ -329,9 +392,48 @@
 				3A67546A2F1D3C83001CD08B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3AABE69D2F1E8515004F995B /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase-community/supabase-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3A4311892F1E8FEB004292AC /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3AABE69D2F1E8515004F995B /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+		3AABE69E2F1E8516004F995B /* Auth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3AABE69D2F1E8515004F995B /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Auth;
+		};
+		3AABE6A02F1E8516004F995B /* Realtime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3AABE69D2F1E8515004F995B /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Realtime;
+		};
+		3AABE6A22F1E8564004F995B /* Auth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3AABE69D2F1E8515004F995B /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Auth;
+		};
+		3AABE6A42F1E8571004F995B /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3AABE69D2F1E8515004F995B /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3A6754552F1D3C82001CD08B /* Project object */;
 }

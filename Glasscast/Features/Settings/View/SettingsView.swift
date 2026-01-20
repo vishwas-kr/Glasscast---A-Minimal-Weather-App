@@ -10,44 +10,39 @@ struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
     @Environment(\.appTheme) var theme
     @AppStorage("appAppearance") private var appearance: AppAppearance = .system
-
+    
     var body: some View {
-        ZStack {
-            theme.background
-                .ignoresSafeArea()
-
-            ScrollView {
-                VStack(spacing: 28) {
-                    header
-                    unitsSection
-                    accountSection
-                    preferencesSection
-                    signOutButton
-                    appVersion
-                }
-                .padding()
+        ScrollView {
+            VStack(spacing: 28) {
+                header
+                unitsSection
+                accountSection
+                preferencesSection
+                signOutButton
+                appVersion
             }
+            .padding()
         }
     }
     var header: some View {
         HStack {
-
+            
             Text("Settings")
                 .font(.title)
                 .fontWeight(.semibold)
                 .foregroundStyle(theme.primaryText)
-
+            
             Spacer()
         }
     }
-
+    
     var unitsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Units")
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundStyle(theme.secondaryText)
-
+            
             VStack(spacing: 16) {
                 unitToggle(
                     title: "Temperature",
@@ -72,7 +67,7 @@ struct SettingsView: View {
             .background(theme.cardMaterial, in: RoundedRectangle(cornerRadius: 24))
         }
     }
-
+    
     func unitToggle(
         title: String,
         left: String,
@@ -84,7 +79,7 @@ struct SettingsView: View {
             Text(title)
                 .foregroundStyle(theme.primaryText)
             Spacer()
-
+            
             HStack(spacing: 4) {
                 unitButton(left, selected: isLeftSelected, action: action)
                 unitButton(right, selected: !isLeftSelected, action: action)
@@ -118,30 +113,30 @@ struct SettingsView: View {
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundStyle(theme.secondaryText)
-
+            
             VStack(spacing: 12) {
                 HStack(spacing: 16) {
                     Image(systemName: "person.fill")
                         .frame(width: 44, height: 44)
                         .background(.thinMaterial, in: Circle())
-
+                    
                     VStack(alignment: .leading, spacing: 4) {
                         Text(viewModel.userName)
                             .fontWeight(.semibold)
                             .foregroundStyle(theme.primaryText)
-
+                        
                         Text(viewModel.email)
                             .font(.caption)
                             .foregroundStyle(theme.secondaryText)
                     }
-
+                    
                     Spacer()
                     Image(systemName: "chevron.right")
                         .foregroundStyle(theme.secondaryText)
                 }
-
+                
                 Divider()
-
+                
                 HStack {
                     Text("Change Password")
                         .foregroundStyle(theme.primaryText)
@@ -160,7 +155,7 @@ struct SettingsView: View {
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundStyle(theme.secondaryText)
-
+            
             VStack(spacing: 16) {
                 HStack {
                     Label("Appearance", systemImage: "moon")
@@ -199,13 +194,13 @@ struct SettingsView: View {
             Text("GLASSCAST WEATHER APP")
                 .font(.caption2)
                 .foregroundStyle(theme.secondaryText)
-
+            
             Text("VERSION 1.0.24 (LIQUID GLASS RC1)")
                 .font(.caption2)
                 .foregroundStyle(theme.secondaryText)
         }
     }
-
+    
 }
 #Preview{
     SettingsView()

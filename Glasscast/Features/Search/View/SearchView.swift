@@ -13,19 +13,14 @@ struct SearchView: View {
     var onCitySelected: ((CLLocation) -> Void)?
     
     var body: some View {
-        ZStack {
-            theme.background
-                .ignoresSafeArea()
-            
-            ScrollView {
-                VStack(alignment: .leading,spacing: 24) {
-                    header
-                    searchBar
-                    recentSearches
-                    results
-                }
-                .padding()
+        ScrollView {
+            VStack(alignment: .leading,spacing: 24) {
+                header
+                searchBar
+                recentSearches
+                results
             }
+            .padding()
         }
     }
     

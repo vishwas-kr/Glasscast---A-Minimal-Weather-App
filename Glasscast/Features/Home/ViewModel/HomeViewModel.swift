@@ -6,17 +6,9 @@
 //
 
 import Combine
-
 import SwiftUI
 import CoreLocation
 
-struct ForecastDay: Identifiable {
-    let id = UUID()
-    let day: String
-    let icon: String
-    let temp: Int
-    let color: Color
-}
 
 @MainActor
 final class HomeViewModel: ObservableObject {
@@ -49,7 +41,6 @@ final class HomeViewModel: ObservableObject {
     private var currentLocation: CLLocation?
     
     init() {
-        // Listen for unit changes
         NotificationCenter.default.addObserver(self, selector: #selector(handleUnitChange), name: UserDefaults.didChangeNotification, object: nil)
         
         favoritesService.$favorites
