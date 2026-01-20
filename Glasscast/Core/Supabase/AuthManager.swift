@@ -15,6 +15,7 @@ protocol AuthServicing {
 
 final class AuthService: AuthServicing {
 
+    static let shared = AuthService()
     private let client = SupabaseManager.client
 
     func signIn(email: String, password: String) async throws {

@@ -9,19 +9,9 @@ import SwiftUI
 
 @main
 struct GlasscastApp: App {
-    @StateObject private var session = SessionManager()
-    
     var body: some Scene {
         WindowGroup {
-            Group {
-                if session.isAuthenticated {
-                    RootTabView()
-                } else {
-                    AuthView()
-                }
-
-            }
-            .environmentObject(session)
+            RootView()
         }
     }
 }

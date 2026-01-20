@@ -7,20 +7,35 @@
 
 import Combine
 import SwiftUI
+import Supabase
 
 @MainActor
 final class SessionManager: ObservableObject {
+    static let shared = SessionManager()
+    
+    @Published var session: Session?
     @Published var isAuthenticated = false
-
-    func signInSuccess() {
-        withAnimation(.smooth) {
-            isAuthenticated = true
-        }
+    
+    private let client = SupabaseManager.client
+    
+    init() {
+        checkAppState()
     }
-
-    func signOut() {
-        withAnimation(.smooth) {
-            isAuthenticated = false
+    
+    private func checkAppState(){
+        Task {
+            do {
+                let currentSession = try await client.auth.session
+                self.session = currentSession
+                self.isAuthenticated = true
+            } catch {}
+            
+            for await state in client.auth.authStateChanges {
+                self.session = state.session
+                withAnimation(.smooth) {
+                    self.isAuthenticated = (state.session != nil)
+                }
+            }
         }
     }
 }

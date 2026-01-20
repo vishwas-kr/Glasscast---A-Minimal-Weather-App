@@ -148,7 +148,7 @@ private extension AuthView {
 
     var continueButton: some View {
         Button {
-            viewModel.submit(session: session)
+            viewModel.submit()
         } label: {
             HStack {
                 if viewModel.isLoading {

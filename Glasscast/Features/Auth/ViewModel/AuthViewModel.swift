@@ -30,7 +30,7 @@ final class AuthViewModel: ObservableObject {
         }
     }
     
-    func submit(session: SessionManager) {
+    func submit() {
         isLoading = true
         guard !email.isEmpty, !password.isEmpty else {
             errorMessage = "Please enter both email and password."
@@ -44,7 +44,6 @@ final class AuthViewModel: ObservableObject {
                 } else {
                     try await authService.signUp(email: email, password: password)
                 }
-                session.signInSuccess()
             } catch {
                 errorMessage = error.localizedDescription
             }
@@ -52,4 +51,3 @@ final class AuthViewModel: ObservableObject {
         }
     }
 }
-
