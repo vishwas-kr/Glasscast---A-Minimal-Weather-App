@@ -31,7 +31,10 @@ struct CityResult: Identifiable, Codable, Equatable {
     }
 }
 
-struct RecentCity: Identifiable {
-    let id = UUID()
+struct RecentSearchItem: Identifiable, Codable {
+    var id = UUID()
     let name: String
+    let country: String
+    let lat: Double
+    let lon: Double
 }

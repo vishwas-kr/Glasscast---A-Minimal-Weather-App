@@ -125,6 +125,7 @@ struct SearchView: View {
         .padding()
         .background(theme.cardMaterial, in: RoundedRectangle(cornerRadius: 20))
         .onTapGesture {
+            viewModel.addRecent(city)
             onCitySelected?(city.location)
         }
     }

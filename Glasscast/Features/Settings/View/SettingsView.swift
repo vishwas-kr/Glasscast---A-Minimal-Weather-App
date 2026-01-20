@@ -184,6 +184,7 @@ struct SettingsView: View {
     }
     var signOutButton: some View {
         Button(role: .destructive) {
+            UserDefaults.standard.removeObject(forKey: "recent_cities")
             viewModel.signOut()
         } label: {
             Text("Sign Out")
