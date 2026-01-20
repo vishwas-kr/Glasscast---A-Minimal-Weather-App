@@ -69,6 +69,9 @@ Glasscast/
 │   │   ├── AuthService.swift
 │   │   └── FavoritesService.swift
 │   │
+│   ├── Location/
+│   │   └── LocationManager.swift
+│   │
 │   ├── Models/
 │   │   ├── WeatherModels.swift
 │   │   └── City.swift

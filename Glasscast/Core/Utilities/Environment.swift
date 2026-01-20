@@ -33,4 +33,11 @@ enum Environment {
         }
         return key
     }
+    
+    static var openWeatherAPIKey: String {
+        guard let key = Bundle.main.object(forInfoDictionaryKey: "WEATHER_API_KEY") as? String else {
+            fatalError("❌ OPENWEATHER_API_KEY not found in Info.plist")
+        }
+        return key
+    }
 }
