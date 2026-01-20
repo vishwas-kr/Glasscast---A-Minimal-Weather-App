@@ -123,7 +123,7 @@ struct HomeView: View {
             MetricCard(
                 icon: "wind",
                 title: "Wind",
-                value: "\(viewModel.wind) km/h"
+                value: "\(viewModel.wind) \(viewModel.windUnit)"
             )
             
             MetricCard(

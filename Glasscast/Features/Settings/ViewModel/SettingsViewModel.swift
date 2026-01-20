@@ -6,16 +6,50 @@
 //
 
 import Combine
+import SwiftUI
+import Supabase
 
 @MainActor
 final class SettingsViewModel: ObservableObject {
 
-    @Published var temperatureUnit: TemperatureUnit = .celsius
-    @Published var windSpeedUnit: WindSpeedUnit = .kmh
+    @Published var temperatureUnit: TemperatureUnit = .celsius {
+        didSet {
+            UserDefaults.standard.set(temperatureUnit.rawValue, forKey: "temperatureUnit")
+        }
+    }
+    @Published var windSpeedUnit: WindSpeedUnit = .kmh {
+        didSet {
+            UserDefaults.standard.set(windSpeedUnit.rawValue, forKey: "windSpeedUnit")
+        }
+    }
     @Published var severeAlertsEnabled = true
 
-    let userName = "Alex Rivera"
-    let email = "alex@glasscast.com"
+    @Published var userName = "Guest"
+    @Published var email = ""
+    
+    private let client = SupabaseManager.client
+    
+    init() {
+        if let tempStr = UserDefaults.standard.string(forKey: "temperatureUnit"),
+           let temp = TemperatureUnit(rawValue: tempStr) {
+            self.temperatureUnit = temp
+        }
+        
+        if let windStr = UserDefaults.standard.string(forKey: "windSpeedUnit"),
+           let wind = WindSpeedUnit(rawValue: windStr) {
+            self.windSpeedUnit = wind
+        }
+        
+        fetchAccount()
+    }
+    
+    func fetchAccount() {
+        guard let user = client.auth.currentUser else { return }
+        self.email = user.email ?? ""
+        if let namePart = self.email.split(separator: "@").first {
+            self.userName = String(namePart).capitalized
+        }
+    }
 
     func toggleTemperature() {
         temperatureUnit.toggle()
@@ -26,11 +60,13 @@ final class SettingsViewModel: ObservableObject {
     }
 
     func signOut() {
-        // Hook into SessionManager / Supabase later
+        Task {
+            try? await AuthService.shared.signOut()
+        }
     }
 }
 
-enum TemperatureUnit {
+enum TemperatureUnit: String {
     case celsius, fahrenheit
 
     mutating func toggle() {
@@ -38,7 +74,7 @@ enum TemperatureUnit {
     }
 }
 
-enum WindSpeedUnit {
+enum WindSpeedUnit: String {
     case kmh, mph
 
     mutating func toggle() {

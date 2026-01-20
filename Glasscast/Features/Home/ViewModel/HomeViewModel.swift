@@ -34,9 +34,34 @@ final class HomeViewModel: ObservableObject {
     @Published var low = 0
 
     @Published var wind = 0
+    @Published var windUnit = "km/h"
     @Published var humidity = 0
 
     @Published var forecast: [ForecastDay] = []
+    
+    // Store raw data to allow unit switching without refetching
+    private var lastWeather: WeatherResponse?
+    private var lastForecastItems: [ForecastItem]?
+    
+    init() {
+        // Listen for unit changes
+        NotificationCenter.default.addObserver(self, selector: #selector(handleUnitChange), name: UserDefaults.didChangeNotification, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc private func handleUnitChange() {
+        Task { @MainActor in
+            if let weather = lastWeather {
+                updateWeatherUI(with: weather)
+            }
+            if let items = lastForecastItems {
+                self.forecast = processForecast(items: items)
+            }
+        }
+    }
     
     func requestLocation() {
         Task {
@@ -65,15 +90,8 @@ final class HomeViewModel: ObservableObject {
         
         do {
             let weather = try await weatherService.fetchWeather(for: location)
-            
-            self.city = weather.name
-            self.temperature = Int(weather.main.temp)
-            self.condition = weather.weather.first?.main ?? "Unknown"
-            self.conditionIcon = mapIcon(weather.weather.first?.icon ?? "")
-            self.high = Int(weather.main.temp_max)
-            self.low = Int(weather.main.temp_min)
-            self.humidity = weather.main.humidity
-            self.wind = Int(weather.wind.speed * 3.6) // Convert m/s to km/h
+            self.lastWeather = weather
+            updateWeatherUI(with: weather)
         } catch {
             print("Weather API Error: \(error)")
             self.city = "--"
@@ -81,9 +99,33 @@ final class HomeViewModel: ObservableObject {
         }
     }
     
+    private func updateWeatherUI(with weather: WeatherResponse) {
+        self.city = weather.name
+        
+        let isCelsius = (UserDefaults.standard.string(forKey: "temperatureUnit") ?? "celsius") == "celsius"
+        let isKmh = (UserDefaults.standard.string(forKey: "windSpeedUnit") ?? "kmh") == "kmh"
+        
+        self.temperature = convertTemp(weather.main.temp, isCelsius: isCelsius)
+        self.high = convertTemp(weather.main.temp_max, isCelsius: isCelsius)
+        self.low = convertTemp(weather.main.temp_min, isCelsius: isCelsius)
+        
+        self.condition = weather.weather.first?.main ?? "Unknown"
+        self.conditionIcon = mapIcon(weather.weather.first?.icon ?? "")
+        self.humidity = weather.main.humidity
+        
+        let speedKmh = weather.wind.speed * 3.6
+        self.wind = isKmh ? Int(speedKmh) : Int(speedKmh * 0.621371)
+        self.windUnit = isKmh ? "km/h" : "mph"
+    }
+    
+    private func convertTemp(_ celsius: Double, isCelsius: Bool) -> Int {
+        return isCelsius ? Int(celsius) : Int(celsius * 9/5 + 32)
+    }
+    
     func fetchForecast(for location: CLLocation) async {
         do {
             let items = try await weatherService.fetchForecast(for: location)
+            self.lastForecastItems = items
             self.forecast = processForecast(items: items)
         } catch {
             print("Forecast API Error: \(error)")
@@ -91,6 +133,7 @@ final class HomeViewModel: ObservableObject {
     }
     
     private func processForecast(items: [ForecastItem]) -> [ForecastDay] {
+        let isCelsius = (UserDefaults.standard.string(forKey: "temperatureUnit") ?? "celsius") == "celsius"
         let calendar = Calendar.current
         
         // Group items by day
@@ -118,7 +161,7 @@ final class HomeViewModel: ObservableObject {
             let date = Date(timeIntervalSince1970: item.dt)
             let dayName = getDayName(date: date)
             let icon = mapIcon(item.weather.first?.icon ?? "")
-            let temp = Int(item.main.temp)
+            let temp = convertTemp(item.main.temp, isCelsius: isCelsius)
             
             // Determine color based on weather
             let condition = item.weather.first?.main.lowercased() ?? ""
