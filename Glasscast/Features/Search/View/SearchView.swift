@@ -79,7 +79,11 @@ struct SearchView: View {
                 .fontWeight(.semibold)
                 .foregroundStyle(.secondary)
             
-            if viewModel.results.isEmpty {
+            if viewModel.isLoading {
+                ProgressView()
+                    .tint(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+            } else if viewModel.results.isEmpty {
                 Text("No results found")
                     .foregroundStyle(.secondary)
             } else {
