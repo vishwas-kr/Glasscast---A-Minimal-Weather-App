@@ -10,7 +10,7 @@ import Foundation
 
 enum SupabaseManager {
     static let client = SupabaseClient(
-        supabaseURL: URL(string:"\(Environment.supabaseURL.absoluteString)")!,
-        supabaseKey: Environment.supabaseAnonKey
+        supabaseURL: URL(string:"\(AppEnvironment.supabaseURL.absoluteString)")!,
+        supabaseKey: AppEnvironment.supabaseAnonKey
     )
 }

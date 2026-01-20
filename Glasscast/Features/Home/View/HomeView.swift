@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct HomeView: View {
-    @StateObject private var viewModel = HomeViewModel()
+    @ObservedObject var viewModel: HomeViewModel
     
     var body: some View {
         ZStack {
             background
                 .ignoresSafeArea()
-
+            
             VStack(spacing: 24) {
                 header
                 currentWeatherCard
@@ -24,11 +24,19 @@ struct HomeView: View {
             }
             .padding()
         }
+        .alert("Error", isPresented: Binding(
+            get: { viewModel.errorMessage != nil },
+            set: { _ in viewModel.errorMessage = nil }
+        )) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(viewModel.errorMessage ?? "")
+        }
     }
     var header: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text("MONDAY, 14 OCT")
+                Text(currentDateString)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 
@@ -82,9 +90,11 @@ struct HomeView: View {
                 
             }
             
-            HStack(spacing: 16) {
-                ForEach(viewModel.forecast) { day in
-                    ForecastCard(day: day)
+            ScrollView(.horizontal,showsIndicators: false){
+                HStack(spacing: 16) {
+                    ForEach(viewModel.forecast) { day in
+                        ForecastCard(day: day)
+                    }
                 }
             }
         }
@@ -107,7 +117,7 @@ struct HomeView: View {
     }
 }
 #Preview {
-    HomeView()
+    HomeView(viewModel: HomeViewModel())
 }
 struct MetricCard: View {
     let icon: String
@@ -150,6 +160,12 @@ struct ForecastCard: View {
 
 
 private extension HomeView {
+    private var currentDateString: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE, d MMM"
+        return formatter.string(from: Date()).uppercased()
+    }
+
     var background: some View {
         LinearGradient(
             colors: [

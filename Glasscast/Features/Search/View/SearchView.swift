@@ -5,16 +5,17 @@
 //  Created by vishwas on 1/19/26.
 //
 import SwiftUI
+import CoreLocation
 
 struct SearchView: View {
     @StateObject private var viewModel = SearchViewModel()
-    @Environment(\.dismiss) private var dismiss
-
+    var onCitySelected: ((CLLocation) -> Void)?
+    
     var body: some View {
         ZStack {
             background
                 .ignoresSafeArea()
-
+            
             ScrollView {
                 VStack(alignment: .leading,spacing: 24) {
                     header
@@ -39,9 +40,12 @@ struct SearchView: View {
         HStack {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(.secondary)
-
+            
             TextField("Search for a city...", text: $viewModel.query)
                 .textInputAutocapitalization(.words)
+                .onChange(of: viewModel.query) { _ in
+                    viewModel.search()
+                }
         }
         .padding()
         .background(.ultraThickMaterial, in: Capsule())
@@ -52,13 +56,18 @@ struct SearchView: View {
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundStyle(.secondary)
-
-            HStack(spacing: 12) {
-                ForEach(viewModel.recentCities) { city in
-                    Text(city.name)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
-                        .background(.ultraThickMaterial, in: Capsule())
+            
+            if viewModel.recentCities.isEmpty {
+                Text("No Result")
+                    .foregroundStyle(.secondary)
+            } else {
+                HStack(spacing: 12) {
+                    ForEach(viewModel.recentCities) { city in
+                        Text(city.name)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(.ultraThickMaterial, in: Capsule())
+                    }
                 }
             }
         }
@@ -69,9 +78,14 @@ struct SearchView: View {
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundStyle(.secondary)
-
-            ForEach(viewModel.results) { city in
-                resultRow(city)
+            
+            if viewModel.results.isEmpty {
+                Text("No results found")
+                    .foregroundStyle(.secondary)
+            } else {
+                ForEach(viewModel.results) { city in
+                    resultRow(city)
+                }
             }
         }
     }
@@ -80,18 +94,18 @@ struct SearchView: View {
             Image(systemName: city.icon)
                 .frame(width: 44, height: 44)
                 .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12))
-
+            
             VStack(alignment: .leading, spacing: 4) {
                 Text(city.name)
                     .font(.headline)
-
+                
                 Text(city.country)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
-
+            
             Spacer()
-
+            
             Button {
                 viewModel.toggleFavorite(city)
             } label: {
@@ -101,6 +115,9 @@ struct SearchView: View {
         }
         .padding()
         .background(.ultraThickMaterial, in: RoundedRectangle(cornerRadius: 20))
+        .onTapGesture {
+            onCitySelected?(city.location)
+        }
     }
 }
 

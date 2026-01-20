@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct RootTabView: View {
+    @StateObject private var homeViewModel = HomeViewModel()
     @State private var selectedTab: AppTab = .home
 
     var body: some View {
@@ -16,6 +18,9 @@ struct RootTabView: View {
             tabBar
         }
         .ignoresSafeArea(edges: .bottom)
+        .task {
+            homeViewModel.requestLocation()
+        }
     }
 }
 
@@ -29,11 +34,14 @@ private extension RootTabView {
         ZStack {
             switch selectedTab {
             case .home:
-                HomeView()
+                HomeView(viewModel: homeViewModel)
                     .transition(.opacity.combined(with: .move(edge: .leading)))
 
             case .search:
-                SearchView()
+                SearchView(onCitySelected: { location in
+                    homeViewModel.loadWeather(for: location)
+                    selectedTab = .home
+                })
                     .transition(.opacity.combined(with: .move(edge: .trailing)))
 
             case .settings:

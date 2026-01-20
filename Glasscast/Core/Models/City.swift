@@ -6,12 +6,14 @@
 //
 
 import Foundation
+import CoreLocation
 
 struct CityResult: Identifiable {
     let id = UUID()
     let name: String
     let country: String
     let icon: String
+    let location : CLLocation
     var isFavorite: Bool = false
 }
 

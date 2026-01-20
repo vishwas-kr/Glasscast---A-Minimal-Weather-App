@@ -36,12 +36,7 @@ final class HomeViewModel: ObservableObject {
     @Published var wind = 0
     @Published var humidity = 0
 
-    let forecast: [ForecastDay] = [
-        .init(day: "Mon", icon: "cloud.fill", temp: 22, color: .blue),
-        .init(day: "Tue", icon: "cloud.sun.fill", temp: 21, color: .yellow),
-        .init(day: "Wed", icon: "cloud.rain.fill", temp: 19, color: .gray),
-        .init(day: "Thu", icon: "sun.max.fill", temp: 23, color: .yellow)
-    ]
+    @Published var forecast: [ForecastDay] = []
     
     func requestLocation() {
         Task {
@@ -50,10 +45,18 @@ final class HomeViewModel: ObservableObject {
                 let location = try await locationManager.getCurrentLocation()
                 print("Location fetched: \(location.coordinate)")
                 await fetchWeather(for: location)
+                await fetchForecast(for: location)
             } catch {
                 print("Location Error: \(error)")
                 errorMessage = "Unable to get location."
             }
+        }
+    }
+    
+    func loadWeather(for location: CLLocation) {
+        Task {
+            await fetchWeather(for: location)
+            await fetchForecast(for: location)
         }
     }
     
@@ -76,6 +79,63 @@ final class HomeViewModel: ObservableObject {
             self.city = "--"
             self.errorMessage = "Unable to load weather data."
         }
+    }
+    
+    func fetchForecast(for location: CLLocation) async {
+        do {
+            let items = try await weatherService.fetchForecast(for: location)
+            self.forecast = processForecast(items: items)
+        } catch {
+            print("Forecast API Error: \(error)")
+        }
+    }
+    
+    private func processForecast(items: [ForecastItem]) -> [ForecastDay] {
+        let calendar = Calendar.current
+        
+        // Group items by day
+        let grouped = Dictionary(grouping: items) { item -> String in
+            let date = Date(timeIntervalSince1970: item.dt)
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd"
+            return formatter.string(from: date)
+        }
+        
+        let sortedKeys = grouped.keys.sorted()
+        
+        return sortedKeys.compactMap { key -> ForecastDay? in
+            guard let dayItems = grouped[key] else { return nil }
+            
+            // Find the item closest to 12:00 PM to represent the day
+            let bestItem = dayItems.min(by: { a, b in
+                let hourA = abs(calendar.component(.hour, from: Date(timeIntervalSince1970: a.dt)) - 12)
+                let hourB = abs(calendar.component(.hour, from: Date(timeIntervalSince1970: b.dt)) - 12)
+                return hourA < hourB
+            })
+            
+            guard let item = bestItem else { return nil }
+            
+            let date = Date(timeIntervalSince1970: item.dt)
+            let dayName = getDayName(date: date)
+            let icon = mapIcon(item.weather.first?.icon ?? "")
+            let temp = Int(item.main.temp)
+            
+            // Determine color based on weather
+            let condition = item.weather.first?.main.lowercased() ?? ""
+            let color: Color
+            if condition.contains("rain") { color = .gray }
+            else if condition.contains("clear") { color = .yellow }
+            else if condition.contains("cloud") { color = .blue }
+            else { color = .primary }
+            
+            return ForecastDay(day: dayName, icon: icon, temp: temp, color: color)
+        }.prefix(5).map { $0 }
+    }
+    
+    private func getDayName(date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "E"
+        return formatter.string(from: date)
     }
     
     private func mapIcon(_ code: String) -> String {

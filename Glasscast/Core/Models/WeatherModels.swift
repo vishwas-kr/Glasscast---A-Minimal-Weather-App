@@ -34,3 +34,24 @@ struct WeatherCondition: Codable {
 struct Wind: Codable {
     let speed: Double
 }
+
+struct ForecastResponse: Codable {
+    let list: [ForecastItem]
+}
+
+struct ForecastItem: Codable {
+    let dt: TimeInterval
+    let main: MainWeather
+    let weather: [WeatherCondition]
+    let dt_txt: String
+}
+
+struct GeoLocation: Codable, Identifiable {
+    let name: String
+    let lat: Double
+    let lon: Double
+    let country: String
+    let state: String?
+    
+    var id: String { "\(name)-\(lat)-\(lon)" }
+}
