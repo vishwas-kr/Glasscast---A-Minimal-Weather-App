@@ -66,10 +66,7 @@ struct FavoritesView: View {
             VStack(spacing: 12) {
                 ForEach(viewModel.favorites) { city in
                     HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(city.name).font(.headline)
-                            Text(city.country).font(.caption).foregroundStyle(.secondary)
-                        }
+                        Text(city.name).font(.headline)
                         Spacer()
                         Button {
                             viewModel.toggle(city)
