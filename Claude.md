@@ -58,6 +58,7 @@ Glasscast is a **minimal, premium weather app** focused on clarity, polish, and 
 Glasscast/
 ├── App/
 │   └── GlasscastApp.swift
+│   └── RootTabView.swift
 │
 ├── Core/
 │   ├── Networking/
@@ -91,8 +92,8 @@ Glasscast/
 │   │   └── HomeViewModel.swift
 │   │
 │   ├── Search/
-│   │   ├── CitySearchView.swift
-│   │   └── CitySearchViewModel.swift
+│   │   ├── SearchView.swift
+│   │   └── SearchViewModel.swift
 │   │
 │   └── Settings/
 │       ├── SettingsView.swift
@@ -123,6 +124,16 @@ Glasscast/
 
 ---
 
+### Root Navigation
+
+**View Responsibilities**
+
+* Manage tab navigation (Home, Search, Settings)
+* Trigger initial location fetch
+* Handle communication between Search and Home tabs
+
+---
+
 ### Home Screen
 
 **Features**
@@ -130,6 +141,7 @@ Glasscast/
 * Current weather display
 * 5-day forecast
 * Pull-to-refresh
+* Favorites list (Sheet presentation)
 
 **ViewModel**
 
@@ -143,7 +155,8 @@ Glasscast/
 
 **Features**
 
-* Search cities
+* Search cities (OpenWeather Geo API)
+* Recent searches list
 * Add/remove favorites
 * Sync with Supabase
 
