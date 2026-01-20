@@ -196,6 +196,8 @@ using (auth.uid() = user_id);
 <key>OPENWEATHER_API_KEY</key>
 <string>your_api_key_here</string>
 ```
+[▶ Stitch UI ](https://stitch.withgoogle.com/projects/350918878521551174)
+Stickt 
 
 ### 📸 App Screenshots:
 
