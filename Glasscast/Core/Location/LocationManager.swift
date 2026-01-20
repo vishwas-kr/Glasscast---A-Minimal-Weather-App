@@ -19,6 +19,7 @@ final class LocationManager: NSObject, ObservableObject {
     @Published var errorMessage: String?
     
     private var locationContinuation: CheckedContinuation<CLLocation, Error>?
+    private var authContinuation: CheckedContinuation<CLAuthorizationStatus, Never>?
 
     override init() {
         self.authorizationStatus = manager.authorizationStatus
@@ -28,24 +29,34 @@ final class LocationManager: NSObject, ObservableObject {
         manager.distanceFilter = 1000
     }
     
-    func requestPermission() {
-        manager.requestWhenInUseAuthorization()
-    }
+    // MARK: - Permission Handling
     
-    func getCurrentLocation() async throws -> CLLocation {
+    private func requestPermissionIfNeeded() async -> CLAuthorizationStatus {
         let status = manager.authorizationStatus
         
-        if status == .denied || status == .restricted {
+        if status != .notDetermined {
+            return status
+        }
+        
+        manager.requestWhenInUseAuthorization()
+        
+        return await withCheckedContinuation { continuation in
+            self.authContinuation = continuation
+        }
+    }
+    
+    // MARK: - Location
+    
+    func getCurrentLocation() async throws -> CLLocation {
+        let status = await requestPermissionIfNeeded()
+        
+        guard status == .authorizedWhenInUse || status == .authorizedAlways else {
             throw LocationError.permissionDenied
         }
         
-        if status == .notDetermined {
-            manager.requestWhenInUseAuthorization()
-        }
-
         return try await withCheckedThrowingContinuation { continuation in
-            if let existingContinuation = locationContinuation {
-                existingContinuation.resume(throwing: LocationError.cancelled)
+            if let existing = locationContinuation {
+                existing.resume(throwing: LocationError.cancelled)
             }
             
             self.locationContinuation = continuation
@@ -56,18 +67,22 @@ final class LocationManager: NSObject, ObservableObject {
 
 // MARK: - CLLocationManagerDelegate
 extension LocationManager: CLLocationManagerDelegate {
+    
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        self.authorizationStatus = manager.authorizationStatus
+        authorizationStatus = manager.authorizationStatus
+        
+        if let continuation = authContinuation {
+            continuation.resume(returning: authorizationStatus)
+            authContinuation = nil
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         self.location = location
         
-        if let continuation = locationContinuation {
-            continuation.resume(returning: location)
-            self.locationContinuation = nil
-        }
+        locationContinuation?.resume(returning: location)
+        locationContinuation = nil
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -82,14 +97,14 @@ extension LocationManager: CLLocationManagerDelegate {
             finalError = error
         }
         
-        self.errorMessage = finalError.localizedDescription
+        errorMessage = finalError.localizedDescription
         
-        if let continuation = locationContinuation {
-            continuation.resume(throwing: finalError)
-            self.locationContinuation = nil
-        }
+        locationContinuation?.resume(throwing: finalError)
+        locationContinuation = nil
     }
 }
+
+// MARK: - Errors
 
 enum LocationError: LocalizedError {
     case permissionDenied
