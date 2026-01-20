@@ -36,12 +36,14 @@ final class HomeViewModel: ObservableObject {
     @Published var wind = 0
     @Published var windUnit = "km/h"
     @Published var humidity = 0
+    @Published var isLoading = false
 
     @Published var forecast: [ForecastDay] = []
     
     // Store raw data to allow unit switching without refetching
     private var lastWeather: WeatherResponse?
     private var lastForecastItems: [ForecastItem]?
+    private var currentLocation: CLLocation?
     
     init() {
         // Listen for unit changes
@@ -65,9 +67,11 @@ final class HomeViewModel: ObservableObject {
     
     func requestLocation() {
         Task {
+            isLoading = true
             errorMessage = nil
             do {
                 let location = try await locationManager.getCurrentLocation()
+                self.currentLocation = location
                 print("Location fetched: \(location.coordinate)")
                 await fetchWeather(for: location)
                 await fetchForecast(for: location)
@@ -75,18 +79,40 @@ final class HomeViewModel: ObservableObject {
                 print("Location Error: \(error)")
                 errorMessage = "Unable to get location."
             }
+            isLoading = false
         }
     }
     
     func loadWeather(for location: CLLocation) {
+        self.currentLocation = location
         Task {
+            isLoading = true
             await fetchWeather(for: location)
             await fetchForecast(for: location)
+            isLoading = false
         }
     }
     
-    func fetchWeather(for location: CLLocation) async {
-        self.city = "Fetching Weather..."
+    func refresh() async {
+        if let location = currentLocation {
+            await fetchWeather(for: location, isRefreshing: true)
+            await fetchForecast(for: location)
+        } else {
+            do {
+                let location = try await locationManager.getCurrentLocation()
+                self.currentLocation = location
+                await fetchWeather(for: location, isRefreshing: true)
+                await fetchForecast(for: location)
+            } catch {
+                errorMessage = "Unable to refresh location."
+            }
+        }
+    }
+    
+    func fetchWeather(for location: CLLocation, isRefreshing: Bool = false) async {
+        if !isRefreshing {
+            self.city = "Fetching..."
+        }
         
         do {
             let weather = try await weatherService.fetchWeather(for: location)

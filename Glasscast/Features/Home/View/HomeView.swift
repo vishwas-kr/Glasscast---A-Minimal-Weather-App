@@ -17,14 +17,25 @@ struct HomeView: View {
             background
                 .ignoresSafeArea()
             
-            VStack(spacing: 24) {
-                header
-                currentWeatherCard
-                fiveDayForecast
-                metricsRow
-                Spacer()
+            ScrollView {
+                VStack(spacing: 24) {
+                    header
+                    
+                    if viewModel.isLoading {
+                        ProgressView()
+                            .scaleEffect(1.5)
+                            .padding(.top, 60)
+                    } else {
+                        currentWeatherCard
+                        fiveDayForecast
+                        metricsRow
+                    }
+                }
+                .padding()
             }
-            .padding()
+            .refreshable {
+                await viewModel.refresh()
+            }
         }
         .alert("Error", isPresented: Binding(
             get: { viewModel.errorMessage != nil },
