@@ -10,7 +10,6 @@ import CoreLocation
 
 struct HomeView: View {
     @ObservedObject var viewModel: HomeViewModel
-    @State private var showFavorites = false
     
     var body: some View {
         ZStack {
@@ -45,11 +44,6 @@ struct HomeView: View {
         } message: {
             Text(viewModel.errorMessage ?? "")
         }
-        .sheet(isPresented: $showFavorites) {
-            FavoritesView { location in
-                viewModel.loadWeather(for: location)
-            }
-        }
     }
     var header: some View {
         HStack {
@@ -65,14 +59,14 @@ struct HomeView: View {
             
             Spacer()
             Button {
-                showFavorites = true
+                viewModel.toggleFavorite()
             } label: {
-                Image(systemName: "heart.fill")
+                Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
                     .font(.system(size: 22))
-                    .foregroundStyle(.blue.opacity(0.8))
+                    .foregroundStyle(viewModel.isFavorite ? .teal : .blue.opacity(0.8))
                     .padding()
                     .background(.clear, in: Circle())
-                    
+                
             }
             .glassEffect()
         }
@@ -204,58 +198,5 @@ private extension HomeView {
             startPoint: .top,
             endPoint: .bottom
         )
-    }
-}
-
-
-struct FavoritesView: View {
-    @Environment(\.dismiss) var dismiss
-    @StateObject private var favoritesService = FavoritesService.shared
-    var onSelect: (CLLocation) -> Void
-    
-    var body: some View {
-        NavigationView {
-            ZStack {
-                LinearGradient(
-                    colors: [Color(red: 0.93, green: 0.95, blue: 0.97), Color(red: 0.78, green: 0.85, blue: 0.9)],
-                    startPoint: .top, endPoint: .bottom
-                ).ignoresSafeArea()
-                
-                if favoritesService.favorites.isEmpty {
-                    VStack(spacing: 12) {
-                        Image(systemName: "heart.slash")
-                            .font(.largeTitle)
-                            .foregroundStyle(.secondary)
-                        Text("No favorites yet")
-                            .foregroundStyle(.secondary)
-                    }
-                } else {
-                    List {
-                        ForEach(favoritesService.favorites) { city in
-                            Button {
-                                onSelect(city.location)
-                                dismiss()
-                            } label: {
-                                HStack {
-                                    VStack(alignment: .leading) {
-                                        Text(city.name).font(.headline)
-                                        Text(city.country).font(.caption).foregroundStyle(.secondary)
-                                    }
-                                    Spacer()
-                                    Button {
-                                        favoritesService.toggle(city)
-                                    } label: {
-                                        Image(systemName: "heart.fill").foregroundStyle(.teal)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    .scrollContentBackground(.hidden)
-                }
-            }
-            .navigationTitle("Favorites")
-            .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Close") { dismiss() } } }
-        }
     }
 }

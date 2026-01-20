@@ -23,6 +23,8 @@ final class HomeViewModel: ObservableObject {
 
     private let locationManager = LocationManager.shared
     private let weatherService = WeatherService()
+    private let favoritesService = FavoritesService.shared
+    private var cancellables = Set<AnyCancellable>()
     
     @Published var city = "Locating..."
     @Published var errorMessage: String?
@@ -37,6 +39,7 @@ final class HomeViewModel: ObservableObject {
     @Published var windUnit = "km/h"
     @Published var humidity = 0
     @Published var isLoading = false
+    @Published var isFavorite = false
 
     @Published var forecast: [ForecastDay] = []
     
@@ -48,6 +51,13 @@ final class HomeViewModel: ObservableObject {
     init() {
         // Listen for unit changes
         NotificationCenter.default.addObserver(self, selector: #selector(handleUnitChange), name: UserDefaults.didChangeNotification, object: nil)
+        
+        favoritesService.$favorites
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.checkIfFavorite()
+            }
+            .store(in: &cancellables)
     }
     
     deinit {
@@ -128,6 +138,8 @@ final class HomeViewModel: ObservableObject {
     private func updateWeatherUI(with weather: WeatherResponse) {
         self.city = weather.name
         
+        checkIfFavorite()
+        
         let isCelsius = (UserDefaults.standard.string(forKey: "temperatureUnit") ?? "celsius") == "celsius"
         let isKmh = (UserDefaults.standard.string(forKey: "windSpeedUnit") ?? "kmh") == "kmh"
         
@@ -142,6 +154,27 @@ final class HomeViewModel: ObservableObject {
         let speedKmh = weather.wind.speed * 3.6
         self.wind = isKmh ? Int(speedKmh) : Int(speedKmh * 0.621371)
         self.windUnit = isKmh ? "km/h" : "mph"
+    }
+    
+    func toggleFavorite() {
+        guard let location = currentLocation, city != "Locating...", city != "Fetching...", city != "--" else { return }
+        
+        let cityResult = CityResult(
+            name: city,
+            country: "",
+            icon: "mappin.and.ellipse",
+            location: location
+        )
+        favoritesService.toggle(cityResult)
+    }
+    
+    private func checkIfFavorite() {
+        guard let location = currentLocation else {
+            isFavorite = false
+            return
+        }
+        let tempCity = CityResult(name: city, country: "", icon: "mappin.and.ellipse", location: location)
+        isFavorite = favoritesService.isFavorite(tempCity)
     }
     
     private func convertTemp(_ celsius: Double, isCelsius: Bool) -> Int {

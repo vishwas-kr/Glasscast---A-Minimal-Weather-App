@@ -44,6 +44,13 @@ private extension RootTabView {
                 })
                     .transition(.opacity.combined(with: .move(edge: .trailing)))
 
+            case .favorites:
+                FavoritesView { location in
+                    homeViewModel.loadWeather(for: location)
+                    selectedTab = .home
+                }
+                .transition(.opacity.combined(with: .move(edge: .trailing)))
+
             case .settings:
                 SettingsView()
                     .transition(.opacity.combined(with: .move(edge: .trailing)))
@@ -93,3 +100,5 @@ private extension RootTabView {
     }
 
 }
+
+
