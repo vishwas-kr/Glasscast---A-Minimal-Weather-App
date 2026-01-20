@@ -30,7 +30,8 @@ Glasscast is a **minimal, premium weather app** focused on clarity, polish, and 
   * Rounded corners
   * Subtle shadow & depth
 * Smooth animations and transitions
-* Support **Light & Dark Mode**
+* Support **Light & Dark Mode** via `AppTheme` environment
+* Use `theme.background`, `theme.primaryText`, etc. instead of system colors
 * No cluttered UI, no placeholder styling
 
 ### Architecture
@@ -58,6 +59,7 @@ Glasscast is a **minimal, premium weather app** focused on clarity, polish, and 
 Glasscast/
 ├── App/
 │   └── GlasscastApp.swift
+│   └── RootView.swift
 │   └── RootTabView.swift
 │
 ├── Core/
@@ -65,9 +67,14 @@ Glasscast/
 │   │   ├── WeatherService.swift
 │   │   └── APIClient.swift
 │   │
+│   ├── Theme/
+│   │   ├── AppTheme.swift
+│   │   ├── Theme.swift
+│   │   └── ThemeManager.swift
+│   │
 │   ├── Supabase/
 │   │   ├── SupabaseClient.swift
-│   │   ├── AuthService.swift
+│   │   ├── AuthManager.swift
 │   │   └── FavoritesService.swift
 │   │
 │   ├── Location/
@@ -80,6 +87,7 @@ Glasscast/
 │   └── Utilities/
 │       ├── Constants.swift
 │       ├── Environment.swift
+│       ├── SessionManager.swift
 │       └── Extensions/
 │
 ├── Features/
@@ -90,6 +98,8 @@ Glasscast/
 │   ├── Home/
 │   │   ├── HomeView.swift
 │   │   └── HomeViewModel.swift
+│   │   ├── FavoritesView.swift
+│   │   └── FavoritesViewModel.swift
 │   │
 │   ├── Search/
 │   │   ├── SearchView.swift
@@ -124,11 +134,17 @@ Glasscast/
 
 ---
 
-### Root Navigation
+### App Entry & Navigation
 
-**View Responsibilities**
+**RootView**
 
-* Manage tab navigation (Home, Search, Settings)
+* Entry point
+* Observes `SessionManager`
+* Switches between `AuthView` and `RootTabView`
+
+**RootTabView**
+
+* Manage tab navigation (Home, Search, Favorites, Settings)
 * Trigger initial location fetch
 * Handle communication between Search and Home tabs
 
@@ -141,13 +157,22 @@ Glasscast/
 * Current weather display
 * 5-day forecast
 * Pull-to-refresh
-* Favorites list (Sheet presentation)
+* Favorite toggle in header
 
 **ViewModel**
 
 * Fetch weather from API
 * Convert temperature units
 * Handle loading, error, success states
+
+### Favorites Screen
+
+**Features**
+
+* Dedicated Tab
+* List of favorite cities
+* Remove favorites
+* Navigate to Home with selected city
 
 ---
 
@@ -172,11 +197,12 @@ Glasscast/
 **Features**
 
 * Temperature unit toggle (°C / °F)
+* Appearance toggle (System / Light / Dark)
 * Sign out
 
 **Persistence**
 
-* User preferences stored locally (UserDefaults)
+* User preferences stored locally (UserDefaults / AppStorage)
 
 ---
 
@@ -249,6 +275,7 @@ Claude/Cursor should:
 
 * Generate **complete files**, not snippets
 * Follow MVVM strictly
+* Use `@Environment(\.appTheme)` for all styling
 * Explain non-obvious decisions briefly
 * Prefer correctness over brevity
 
