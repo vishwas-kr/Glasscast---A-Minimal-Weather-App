@@ -34,7 +34,12 @@ struct HomeView: View {
                 .padding()
             }
             .refreshable {
-                await viewModel.refresh()
+                let success = await viewModel.refresh()
+                    if success {
+                        HapticManager.notification(.success)
+                    } else {
+                        HapticManager.notification(.error)
+                    }
             }
         }
         .alert("Error", isPresented: Binding(
@@ -68,6 +73,7 @@ private extension HomeView {
 
             Button {
                 viewModel.toggleFavorite()
+                HapticManager.impact(.light)
             } label: {
                 Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
                     .font(.system(size: 22))

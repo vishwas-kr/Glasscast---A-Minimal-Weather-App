@@ -151,6 +151,7 @@ private extension AuthView {
 
     var continueButton: some View {
         Button {
+            HapticManager.impact(.medium)
             viewModel.submit()
         } label: {
             HStack {

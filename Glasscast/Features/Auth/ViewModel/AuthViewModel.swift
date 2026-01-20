@@ -34,6 +34,7 @@ final class AuthViewModel: ObservableObject {
         isLoading = true
         guard !email.isEmpty, !password.isEmpty else {
             errorMessage = "Please enter both email and password."
+            isLoading = false
             return
         }
         errorMessage = nil
@@ -46,6 +47,7 @@ final class AuthViewModel: ObservableObject {
                 }
             } catch {
                 errorMessage = error.localizedDescription
+                isLoading = false
             }
             isLoading = false
         }

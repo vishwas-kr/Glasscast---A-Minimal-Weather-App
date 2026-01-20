@@ -20,7 +20,7 @@ struct ForecastDay: Identifiable {
 
 @MainActor
 final class HomeViewModel: ObservableObject {
-
+    
     private let locationManager = LocationManager.shared
     private let weatherService = WeatherService()
     private let favoritesService = FavoritesService.shared
@@ -34,13 +34,13 @@ final class HomeViewModel: ObservableObject {
     @Published var conditionIcon = "cloud"
     @Published var high = 0
     @Published var low = 0
-
+    
     @Published var wind = 0
     @Published var windUnit = "km/h"
     @Published var humidity = 0
     @Published var isLoading = false
     @Published var isFavorite = false
-
+    
     @Published var forecast: [ForecastDay] = []
     
     // Store raw data to allow unit switching without refetching
@@ -103,21 +103,27 @@ final class HomeViewModel: ObservableObject {
         }
     }
     
-    func refresh() async {
-        if let location = currentLocation {
+    func refresh() async -> Bool {
+        do {
+            let location: CLLocation
+            
+            if let currentLocation {
+                location = currentLocation
+            } else {
+                location = try await locationManager.getCurrentLocation()
+                self.currentLocation = location
+            }
+            
             await fetchWeather(for: location, isRefreshing: true)
             await fetchForecast(for: location)
-        } else {
-            do {
-                let location = try await locationManager.getCurrentLocation()
-                self.currentLocation = location
-                await fetchWeather(for: location, isRefreshing: true)
-                await fetchForecast(for: location)
-            } catch {
-                errorMessage = "Unable to refresh location."
-            }
+            
+            return true
+        } catch {
+            errorMessage = "Unable to refresh location."
+            return false
         }
     }
+    
     
     func fetchWeather(for location: CLLocation, isRefreshing: Bool = false) async {
         if !isRefreshing {
