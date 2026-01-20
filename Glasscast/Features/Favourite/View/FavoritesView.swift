@@ -10,14 +10,13 @@ import CoreLocation
 
 struct FavoritesView: View {
     @StateObject private var viewModel = FavoritesViewModel()
+    @Environment(\.appTheme) var theme
     var onSelect: (CLLocation) -> Void
     
     var body: some View {
         ZStack {
-            LinearGradient(
-                colors: [Color(red: 0.93, green: 0.95, blue: 0.97), Color(red: 0.78, green: 0.85, blue: 0.9)],
-                startPoint: .top, endPoint: .bottom
-            ).ignoresSafeArea()
+            theme.background
+                .ignoresSafeArea()
             
             VStack(spacing: 0) {
                 header
@@ -44,6 +43,7 @@ struct FavoritesView: View {
             Text("Favourites")
                 .font(.title)
                 .fontWeight(.semibold)
+                .foregroundStyle(theme.primaryText)
             Spacer()
         }
         .padding()
@@ -54,9 +54,9 @@ struct FavoritesView: View {
             Spacer()
             Image(systemName: "heart.slash")
                 .font(.largeTitle)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(theme.secondaryText)
             Text("No favorites yet")
-                .foregroundStyle(.secondary)
+                .foregroundStyle(theme.secondaryText)
             Spacer()
         }
     }
@@ -66,16 +66,18 @@ struct FavoritesView: View {
             VStack(spacing: 12) {
                 ForEach(viewModel.favorites) { city in
                     HStack {
-                        Text(city.name).font(.headline)
+                        Text(city.name)
+                            .font(.headline)
+                            .foregroundStyle(theme.primaryText)
                         Spacer()
                         Button {
                             viewModel.toggle(city)
                         } label: {
-                            Image(systemName: "heart.fill").foregroundStyle(.teal)
+                            Image(systemName: "heart.fill").foregroundStyle(theme.accent)
                         }
                     }
                     .padding()
-                    .background(.ultraThickMaterial, in: RoundedRectangle(cornerRadius: 20))
+                    .background(theme.cardMaterial, in: RoundedRectangle(cornerRadius: 20))
                     .onTapGesture {
                         onSelect(city.location)
                     }

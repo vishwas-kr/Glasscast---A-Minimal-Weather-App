@@ -9,11 +9,12 @@ import CoreLocation
 
 struct SearchView: View {
     @StateObject private var viewModel = SearchViewModel()
+    @Environment(\.appTheme) var theme
     var onCitySelected: ((CLLocation) -> Void)?
     
     var body: some View {
         ZStack {
-            background
+            theme.background
                 .ignoresSafeArea()
             
             ScrollView {
@@ -33,13 +34,14 @@ struct SearchView: View {
             Text("Search City")
                 .font(.title)
                 .fontWeight(.semibold)
+                .foregroundStyle(theme.primaryText)
         }
     }
     
     var searchBar: some View {
         HStack {
             Image(systemName: "magnifyingglass")
-                .foregroundStyle(.secondary)
+                .foregroundStyle(theme.secondaryText)
             
             TextField("Search for a city...", text: $viewModel.query)
                 .textInputAutocapitalization(.words)
@@ -48,25 +50,26 @@ struct SearchView: View {
                 }
         }
         .padding()
-        .background(.ultraThickMaterial, in: Capsule())
+        .background(theme.cardMaterial, in: Capsule())
     }
     var recentSearches: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("RECENT SEARCHES")
                 .font(.subheadline)
                 .fontWeight(.semibold)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(theme.secondaryText)
             
             if viewModel.recentCities.isEmpty {
                 Text("No Result")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(theme.secondaryText)
             } else {
                 HStack(spacing: 12) {
                     ForEach(viewModel.recentCities) { city in
                         Text(city.name)
+                            .foregroundStyle(theme.primaryText)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 8)
-                            .background(.ultraThickMaterial, in: Capsule())
+                            .background(theme.cardMaterial, in: Capsule())
                     }
                 }
             }
@@ -77,15 +80,15 @@ struct SearchView: View {
             Text("RESULTS")
                 .font(.subheadline)
                 .fontWeight(.semibold)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(theme.secondaryText)
             
             if viewModel.isLoading {
                 ProgressView()
-                    .tint(.secondary)
+                    .tint(theme.secondaryText)
                     .frame(maxWidth: .infinity, alignment: .center)
             } else if viewModel.results.isEmpty {
                 Text("No results found")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(theme.secondaryText)
             } else {
                 ForEach(viewModel.results) { city in
                     resultRow(city)
@@ -97,15 +100,17 @@ struct SearchView: View {
         HStack(spacing: 16) {
             Image(systemName: city.icon)
                 .frame(width: 44, height: 44)
+                .foregroundStyle(theme.primaryText)
                 .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12))
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(city.name)
                     .font(.headline)
+                    .foregroundStyle(theme.primaryText)
                 
                 Text(city.country)
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(theme.secondaryText)
             }
             
             Spacer()
@@ -114,26 +119,13 @@ struct SearchView: View {
                 viewModel.toggleFavorite(city)
             } label: {
                 Image(systemName: city.isFavorite ? "heart.fill" : "heart")
-                    .foregroundStyle(city.isFavorite ? .teal : .secondary)
+                    .foregroundStyle(city.isFavorite ? theme.accent : theme.secondaryText)
             }
         }
         .padding()
-        .background(.ultraThickMaterial, in: RoundedRectangle(cornerRadius: 20))
+        .background(theme.cardMaterial, in: RoundedRectangle(cornerRadius: 20))
         .onTapGesture {
             onCitySelected?(city.location)
         }
-    }
-}
-
-private extension SearchView {
-    var background: some View {
-        LinearGradient(
-            colors: [
-                Color(red: 0.93, green: 0.95, blue: 0.97),
-                Color(red: 0.78, green: 0.85, blue: 0.9)
-            ],
-            startPoint: .top,
-            endPoint: .bottom
-        )
     }
 }

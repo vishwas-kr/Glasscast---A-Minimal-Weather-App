@@ -12,6 +12,7 @@ struct AuthView: View {
     @FocusState private var focusedEmail: Field?
     @FocusState private var focusedPassword: Field?
     @EnvironmentObject var session: SessionManager
+    @Environment(\.appTheme) var theme
 
     enum Field {
         case email, password
@@ -19,7 +20,8 @@ struct AuthView: View {
 
     var body: some View {
         ZStack {
-            backgroundGradient
+            theme.background
+                .ignoresSafeArea()
 
             VStack {
                 Spacer()
@@ -60,7 +62,7 @@ private extension AuthView {
             .padding(28)
             .background {
                 RoundedRectangle(cornerRadius: 32, style: .continuous)
-                    .fill(.ultraThinMaterial)
+                    .fill(theme.cardMaterial)
                     .shadow(color: .black.opacity(0.15), radius: 30, y: 20)
             }
         }
@@ -72,10 +74,11 @@ private extension AuthView {
         VStack(spacing: 8) {
             Text(viewModel.mode.title)
                 .font(.system(size: 34, weight: .bold))
+                .foregroundStyle(theme.primaryText)
 
             Text(viewModel.mode.subtitle)
                 .font(.system(size: 16))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(theme.secondaryText)
         }
     }
 
@@ -85,20 +88,20 @@ private extension AuthView {
             Text("EMAIL ADDRESS")
                 .font(.caption)
                 .fontWeight(.semibold)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(theme.secondaryText)
 
             HStack {
                 Image(systemName: "envelope")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(theme.secondaryText)
 
                 TextField("name@example.com", text: $viewModel.email)
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(theme.primaryText)
                     .keyboardType(.emailAddress)
                     .textInputAutocapitalization(.never)
                     .focused($focusedEmail, equals: .email)
             }
             .padding()
-            .foregroundStyle(.secondary)
+            .foregroundStyle(theme.secondaryText)
             .glassEffect()
         }
     }
@@ -108,11 +111,11 @@ private extension AuthView {
             Text("PASSWORD")
                 .font(.caption)
                 .fontWeight(.semibold)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(theme.secondaryText)
 
             HStack {
                 Image(systemName: "lock")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(theme.secondaryText)
 
                 Group {
                     if viewModel.isPasswordVisible {
@@ -129,7 +132,7 @@ private extension AuthView {
                     }
                 } label: {
                     Image(systemName: viewModel.isPasswordVisible ? "eye.slash" : "eye")
-                        .foregroundStyle(.gray)
+                        .foregroundStyle(theme.secondaryText)
                 }
             }
             .padding()
@@ -142,7 +145,7 @@ private extension AuthView {
             Spacer()
             Button("Forgot Password?") {}
                 .font(.footnote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(theme.secondaryText)
         }
     }
 
@@ -171,27 +174,16 @@ private extension AuthView {
     var footer: some View {
         HStack(spacing: 4) {
             Text(viewModel.mode.footerText)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(theme.secondaryText)
 
             Button(viewModel.mode.footerActionText) {
                 viewModel.toggleMode()
             }
             .fontWeight(.semibold)
+            .foregroundStyle(theme.accent)
         }
         .font(.footnote)
 
-    }
-
-    var backgroundGradient: some View {
-        LinearGradient(
-            colors: [
-                Color(red: 0.75, green: 0.9, blue: 0.97),
-                Color(red: 0.85, green: 0.88, blue: 0.95)
-            ],
-            startPoint: .top,
-            endPoint: .bottom
-        )
-        .ignoresSafeArea()
     }
 }
 

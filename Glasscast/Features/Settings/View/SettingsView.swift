@@ -8,10 +8,12 @@ import SwiftUI
 
 struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
+    @Environment(\.appTheme) var theme
+    @AppStorage("appAppearance") private var appearance: AppAppearance = .system
 
     var body: some View {
         ZStack {
-            background
+            theme.background
                 .ignoresSafeArea()
 
             ScrollView {
@@ -33,6 +35,7 @@ struct SettingsView: View {
             Text("Settings")
                 .font(.title)
                 .fontWeight(.semibold)
+                .foregroundStyle(theme.primaryText)
 
             Spacer()
         }
@@ -43,7 +46,7 @@ struct SettingsView: View {
             Text("Units")
                 .font(.subheadline)
                 .fontWeight(.semibold)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(theme.secondaryText)
 
             VStack(spacing: 16) {
                 unitToggle(
@@ -55,7 +58,7 @@ struct SettingsView: View {
                     viewModel.toggleTemperature()
                 }
                 Divider()
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(theme.secondaryText)
                 unitToggle(
                     title: "Wind Speed",
                     left: "km/h",
@@ -66,7 +69,7 @@ struct SettingsView: View {
                 }
             }
             .padding()
-            .background(.ultraThickMaterial, in: RoundedRectangle(cornerRadius: 24))
+            .background(theme.cardMaterial, in: RoundedRectangle(cornerRadius: 24))
         }
     }
 
@@ -79,6 +82,7 @@ struct SettingsView: View {
     ) -> some View {
         HStack {
             Text(title)
+                .foregroundStyle(theme.primaryText)
             Spacer()
 
             HStack(spacing: 4) {
@@ -100,7 +104,7 @@ struct SettingsView: View {
             Text(title)
                 .font(.footnote)
                 .fontWeight(selected ? .semibold : .regular)
-                .foregroundStyle(selected ? .black : .secondary)
+                .foregroundStyle(selected ? .black : theme.secondaryText)
                 .frame(width: 52, height: 32)
                 .background(
                     selected ? Color.white : Color.clear,
@@ -113,7 +117,7 @@ struct SettingsView: View {
             Text("Account")
                 .font(.subheadline)
                 .fontWeight(.semibold)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(theme.secondaryText)
 
             VStack(spacing: 12) {
                 HStack(spacing: 16) {
@@ -124,26 +128,30 @@ struct SettingsView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(viewModel.userName)
                             .fontWeight(.semibold)
+                            .foregroundStyle(theme.primaryText)
 
                         Text(viewModel.email)
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(theme.secondaryText)
                     }
 
                     Spacer()
                     Image(systemName: "chevron.right")
+                        .foregroundStyle(theme.secondaryText)
                 }
 
                 Divider()
 
                 HStack {
                     Text("Change Password")
+                        .foregroundStyle(theme.primaryText)
                     Spacer()
                     Image(systemName: "lock.rotation")
+                        .foregroundStyle(theme.secondaryText)
                 }
             }
             .padding()
-            .background(.ultraThickMaterial, in: RoundedRectangle(cornerRadius: 24))
+            .background(theme.cardMaterial, in: RoundedRectangle(cornerRadius: 24))
         }
     }
     var preferencesSection: some View {
@@ -151,18 +159,27 @@ struct SettingsView: View {
             Text("Preferences")
                 .font(.subheadline)
                 .fontWeight(.semibold)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(theme.secondaryText)
 
             VStack(spacing: 16) {
                 HStack {
                     Label("Appearance", systemImage: "moon")
+                        .foregroundStyle(theme.primaryText)
                     Spacer()
-                    Text("System")
-                        .foregroundStyle(.blue)
+                    Menu {
+                        Picker("Appearance", selection: $appearance) {
+                            ForEach(AppAppearance.allCases) { style in
+                                Text(style.displayName).tag(style)
+                            }
+                        }
+                    } label: {
+                        Text(appearance.displayName)
+                            .foregroundStyle(theme.accent)
+                    }
                 }
             }
             .padding()
-            .background(.ultraThickMaterial, in: RoundedRectangle(cornerRadius: 14))
+            .background(theme.cardMaterial, in: RoundedRectangle(cornerRadius: 14))
         }
     }
     var signOutButton: some View {
@@ -173,17 +190,18 @@ struct SettingsView: View {
                 .frame(maxWidth: .infinity)
                 .padding()
                 .background(.ultraThinMaterial, in: Capsule())
+                .foregroundStyle(.red)
         }
     }
     var appVersion: some View {
         VStack(spacing: 4) {
             Text("GLASSCAST WEATHER APP")
                 .font(.caption2)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(theme.secondaryText)
 
             Text("VERSION 1.0.24 (LIQUID GLASS RC1)")
                 .font(.caption2)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(theme.secondaryText)
         }
     }
 
@@ -191,16 +209,3 @@ struct SettingsView: View {
 #Preview{
     SettingsView()
 }
-private extension SettingsView {
-    var background: some View {
-        LinearGradient(
-            colors: [
-                Color(red: 0.93, green: 0.95, blue: 0.97),
-                Color(red: 0.78, green: 0.85, blue: 0.9)
-            ],
-            startPoint: .top,
-            endPoint: .bottom
-        )
-    }
-}
-
