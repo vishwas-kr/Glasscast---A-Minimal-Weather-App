@@ -224,6 +224,12 @@ Dark Mode:
 ### Working Video 
 [▶ Watch demo ](https://drive.google.com/file/d/1_uRAF8L6SI83WzsU3PJ6vCTXUQ2giCeG/view?usp=sharing)
 
+### Glasscast Widget Video:
+
+https://github.com/user-attachments/assets/0459151f-0b4d-42e8-962a-bfedc70fcd9e
+
+
+
 ### Prompt Video : Gemini
 [▶ Prompt](https://drive.google.com/file/d/1s8OpfvcDzTJa1pfXN6r9-Brl7PzHe5mv/view?usp=sharing)
 
