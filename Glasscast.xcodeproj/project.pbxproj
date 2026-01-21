@@ -8,12 +8,43 @@
 
 /* Begin PBXBuildFile section */
 		3A43118A2F1E8FEB004292AC /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 3A4311892F1E8FEB004292AC /* Supabase */; };
+		3A9753D82F2113AC001351BC /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9753D72F2113AC001351BC /* WidgetKit.framework */; };
+		3A9753DA2F2113AC001351BC /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9753D92F2113AC001351BC /* SwiftUI.framework */; };
+		3A9753E52F2113AE001351BC /* GlasscastWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3A9753D62F2113AC001351BC /* GlasscastWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		3AABE69F2F1E8516004F995B /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 3AABE69E2F1E8516004F995B /* Auth */; };
 		3AABE6A12F1E8516004F995B /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = 3AABE6A02F1E8516004F995B /* Realtime */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		3A9753E32F2113AE001351BC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A6754552F1D3C82001CD08B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3A9753D52F2113AC001351BC;
+			remoteInfo = GlasscastWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3A9753E62F2113AE001351BC /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				3A9753E52F2113AE001351BC /* GlasscastWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		3A67545D2F1D3C82001CD08B /* Glasscast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Glasscast.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A9753D62F2113AC001351BC /* GlasscastWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GlasscastWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A9753D72F2113AC001351BC /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		3A9753D92F2113AC001351BC /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		3A9753F82F212728001351BC /* GlasscastWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GlasscastWidgetExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -24,6 +55,21 @@
 			);
 			target = 3A67545C2F1D3C82001CD08B /* Glasscast */;
 		};
+		3A9753EA2F2113AE001351BC /* Exceptions for "GlasscastWidget" folder in "GlasscastWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 3A9753D52F2113AC001351BC /* GlasscastWidgetExtension */;
+		};
+		3A9753F62F211EBF001351BC /* Exceptions for "Glasscast" folder in "GlasscastWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Shared/Models/WeatherWidget.swift,
+				Shared/WidgetCache.swift,
+			);
+			target = 3A9753D52F2113AC001351BC /* GlasscastWidgetExtension */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -31,8 +77,17 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				3A329AB82F1F7353002708CB /* Exceptions for "Glasscast" folder in "Glasscast" target */,
+				3A9753F62F211EBF001351BC /* Exceptions for "Glasscast" folder in "GlasscastWidgetExtension" target */,
 			);
 			path = Glasscast;
+			sourceTree = "<group>";
+		};
+		3A9753DB2F2113AC001351BC /* GlasscastWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3A9753EA2F2113AE001351BC /* Exceptions for "GlasscastWidget" folder in "GlasscastWidgetExtension" target */,
+			);
+			path = GlasscastWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -48,12 +103,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3A9753D32F2113AC001351BC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A9753DA2F2113AC001351BC /* SwiftUI.framework in Frameworks */,
+				3A9753D82F2113AC001351BC /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		3A4311882F1E8FEB004292AC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3A9753D72F2113AC001351BC /* WidgetKit.framework */,
+				3A9753D92F2113AC001351BC /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -61,7 +127,9 @@
 		3A6754542F1D3C82001CD08B = {
 			isa = PBXGroup;
 			children = (
+				3A9753F82F212728001351BC /* GlasscastWidgetExtension.entitlements */,
 				3A67545F2F1D3C82001CD08B /* Glasscast */,
+				3A9753DB2F2113AC001351BC /* GlasscastWidget */,
 				3A4311882F1E8FEB004292AC /* Frameworks */,
 				3A67545E2F1D3C82001CD08B /* Products */,
 			);
@@ -71,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				3A67545D2F1D3C82001CD08B /* Glasscast.app */,
+				3A9753D62F2113AC001351BC /* GlasscastWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -85,12 +154,14 @@
 				3A6754592F1D3C82001CD08B /* Sources */,
 				3A67545A2F1D3C82001CD08B /* Frameworks */,
 				3A67545B2F1D3C82001CD08B /* Resources */,
+				3A9753E62F2113AE001351BC /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				3AABE6A52F1E8571004F995B /* PBXTargetDependency */,
 				3AABE6A32F1E8564004F995B /* PBXTargetDependency */,
+				3A9753E42F2113AE001351BC /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				3A67545F2F1D3C82001CD08B /* Glasscast */,
@@ -105,6 +176,28 @@
 			productReference = 3A67545D2F1D3C82001CD08B /* Glasscast.app */;
 			productType = "com.apple.product-type.application";
 		};
+		3A9753D52F2113AC001351BC /* GlasscastWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A9753E92F2113AE001351BC /* Build configuration list for PBXNativeTarget "GlasscastWidgetExtension" */;
+			buildPhases = (
+				3A9753D22F2113AC001351BC /* Sources */,
+				3A9753D32F2113AC001351BC /* Frameworks */,
+				3A9753D42F2113AC001351BC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				3A9753DB2F2113AC001351BC /* GlasscastWidget */,
+			);
+			name = GlasscastWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = GlasscastWidgetExtension;
+			productReference = 3A9753D62F2113AC001351BC /* GlasscastWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -116,6 +209,9 @@
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					3A67545C2F1D3C82001CD08B = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					3A9753D52F2113AC001351BC = {
 						CreatedOnToolsVersion = 26.2;
 					};
 				};
@@ -138,12 +234,20 @@
 			projectRoot = "";
 			targets = (
 				3A67545C2F1D3C82001CD08B /* Glasscast */,
+				3A9753D52F2113AC001351BC /* GlasscastWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		3A67545B2F1D3C82001CD08B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3A9753D42F2113AC001351BC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -160,9 +264,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3A9753D22F2113AC001351BC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3A9753E42F2113AE001351BC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3A9753D52F2113AC001351BC /* GlasscastWidgetExtension */;
+			targetProxy = 3A9753E32F2113AE001351BC /* PBXContainerItemProxy */;
+		};
 		3AABE6A32F1E8564004F995B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			productRef = 3AABE6A22F1E8564004F995B /* Auth */;
@@ -306,6 +422,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Glasscast/Glasscast.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3FZ8L8R4MA;
@@ -343,6 +460,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Glasscast/Glasscast.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3FZ8L8R4MA;
@@ -373,6 +491,68 @@
 			};
 			name = Release;
 		};
+		3A9753E72F2113AE001351BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = GlasscastWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3FZ8L8R4MA;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GlasscastWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = GlasscastWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.learn.Glasscast.GlasscastWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3A9753E82F2113AE001351BC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = GlasscastWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3FZ8L8R4MA;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GlasscastWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = GlasscastWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.learn.Glasscast.GlasscastWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -390,6 +570,15 @@
 			buildConfigurations = (
 				3A6754692F1D3C83001CD08B /* Debug */,
 				3A67546A2F1D3C83001CD08B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3A9753E92F2113AE001351BC /* Build configuration list for PBXNativeTarget "GlasscastWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A9753E72F2113AE001351BC /* Debug */,
+				3A9753E82F2113AE001351BC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

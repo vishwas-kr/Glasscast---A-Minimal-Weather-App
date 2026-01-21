@@ -8,6 +8,7 @@
 import Combine
 import SwiftUI
 import CoreLocation
+import WidgetKit
 
 
 @MainActor
@@ -151,6 +152,23 @@ final class HomeViewModel: ObservableObject {
         let speedKmh = weather.wind.speed * 3.6
         self.wind = isKmh ? Int(speedKmh) : Int(speedKmh * 0.621371)
         self.windUnit = isKmh ? "km/h" : "mph"
+        
+        updateWeatherWidget()
+    }
+    
+    func updateWeatherWidget() {
+        guard let lastWeather = self.lastWeather, city != "Locating...", city != "Fetching..." else { return }
+
+        let widgetWeather = WeatherWidget(
+            temperature: lastWeather.main.temp,
+            city: self.city,
+            conditionSymbol: self.conditionIcon,
+            updatedAt: Date()
+        )
+        
+        WidgetCache.shared.save(widgetWeather)
+        // Notify the widget to reload its timeline
+        WidgetCenter.shared.reloadAllTimelines()
     }
     
     func toggleFavorite() {
