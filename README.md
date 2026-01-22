@@ -1,7 +1,7 @@
 # 🌦️ Glasscast
 
 Glasscast is a modern iOS weather application built with **SwiftUI**, following **MVVM architecture**, featuring a **glassmorphism UI**, **Supabase authentication**, and **OpenWeather API** integration.  
-The app supports **Dark Mode**, **haptic feedback**, **pull-to-refresh**, and a **custom animated tab navigation**.
+The app supports **Dark Mode**, **haptic feedback**, **pull-to-refresh**, **Widget** and a **custom animated tab navigation**.
 
 ---
 
